@@ -29,10 +29,12 @@ class Ship:
 
 
 class Board:
-    def __init__(self):
-        self.field = [['O' for _ in range(6)] for _ in range(6)]
+    def __init__(self, hid):
+        self.size = 6
+        self.field = [['O' for _ in range(self.size)] for _ in range(self.size)]
         self.ships = []
-        self.alive_ships = 0
+        self.hid = hid
+        self.alive_ships = 0  # количество кораблей на доске
 
     def add_ship(self, ship):
         # Входит ли корабль на поле
@@ -62,21 +64,18 @@ class Board:
             return False
 
 
-    def display(self, hidden=False):
+    def display(self):
         header = "   | 0 | 1 | 2 | 3 | 4 | 5 |"
         separator = "-" * len(header)
 
         print(header)
         print(separator)
 
-        for y in range(6):
+        for y in range(self.size):
             row_display = f"{y:2} | "
-            for x in range(6):
+            for x in range(self.size):
                 row_display += f"{self.field[x][y]} | "
-            if hidden:
-                print(row_display.replace('■', 'O'))
-            else:
-                print(row_display)
+            print(row_display)
 
         print(separator)
         print("\n")
@@ -84,8 +83,8 @@ class Board:
 
 class Game:
     def __init__(self):
-        self.user_board = Board()
-        self.ai_board = Board()
+        self.user_board = Board(hid=False)
+        self.ai_board = Board(hid=True)
 
 
     def random_board(self, board):
@@ -141,7 +140,7 @@ class Game:
             print("Доска игрока:")
             self.user_board.display()
             print("Доска противника:")
-            self.ai_board.display(hidden=True)
+            self.ai_board.display()
             print("Ваш ход:")
 
             while True:
@@ -193,8 +192,6 @@ class Game:
     # Старт игры
     def start(self):
         while True:
-            self.user_board = Board()
-            self.ai_board = Board()
             self.random_board(self.user_board)
             self.random_board(self.ai_board)
 
